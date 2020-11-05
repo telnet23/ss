@@ -1,0 +1,24 @@
+CREATE DATABASE IF NOT EXISTS ss;
+USE ss;
+
+CREATE TABLE daily
+(
+  `symbol` VARCHAR(16) NOT NULL,
+  `timestamp` INT UNSIGNED NOT NULL,
+  `open` FLOAT DEFAULT NULL,
+  `high` FLOAT DEFAULT NULL,
+  `low` FLOAT DEFAULT NULL,
+  `close` FLOAT DEFAULT NULL,
+  PRIMARY KEY (`symbol`, `timestamp`)
+);
+
+CREATE TABLE query
+(
+  `id` CHAR(12) NOT NULL,
+  `query` JSON DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+REVOKE ALL PRIVILEGES ON * FROM 'ss'@'%';
+GRANT SELECT ON ss.daily TO 'ss'@'%';
+FLUSH PRIVILEGES;

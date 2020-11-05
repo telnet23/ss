@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stock Screener</title>
+    <meta name="referrer" content="origin-when-cross-origin">
+    <meta name="robots" content="noindex">
+    <!-- <link rel="canonical" href="./"> -->
+    <link href="static/favicon.ico" rel="icon" type="image/x-icon">
+    <link href="static/bootstrap.min.css" rel="stylesheet">
+    <link href="static/bootstrap-glyphicons.min.css" rel="stylesheet">
+    <!--<link href="static/query-builder.dark.min.css" rel="stylesheet">-->
+    <link href="static/uPlot.min.css" rel="stylesheet">
+    <link href="static/main.css" rel="stylesheet">
+    <script src="static/bootstrap.min.js"></script>
+    <script src="static/jquery-3.5.1.min.js"></script>
+    <!--<script src="static/jQuery.extendext.min.js"></script>-->
+    <!--<script src="static/doT.min.js"></script>-->
+    <!--<script src="static/interact.min.js"></script>-->
+    <!--<script src="static/moment.min.js"></script>-->
+    <!--<script src="static/query-builder.js"></script>-->
+    <!--<script src="static/plotly-latest.min.js"></script>-->
+    <script src="static/jquery.bootstrap-growl.min.js"></script>
+    <script src="static/uPlot.iife.min.js"></script>
+    <script src="static/main.js"></script>
+  </head>
+  <body>
+    <h1 class="text-center"><small><a href="./">Stock Screener</a></small></h1>
+<!--
+    <div>Filter stock symbols by adding conditions and/or groups of conditions:</div>
+    <div class="wide" id="query"></div>
+    <div class="form-inline">
+      <button class="btn btn-xs btn-success" id="query-submit"><i class="glyphicon glyphicon-search"></i> Submit query</button>
+      <div id="query-count"></div>
+      <div class="btn-group right">
+        <button class="btn btn-xs btn-warning" id="query-example"><i class="glyphicon glyphicon-bookmark"></i> Load example query</button>
+        <button class="btn btn-xs btn-danger" id="query-clear"><i class="glyphicon glyphicon-trash"></i> Clear query</button>
+      </div>
+    </div>
+    <hr class="inv">
+-->
+    <div>Enter a list of stock symbols separated by commas, spaces, and/or newlines:</div>
+    <hr class="inv">
+    <textarea autocapitalize="off" autocomplete="off" autocorrect="off" autofocus class="form-control" id="symbols" spellcheck="false"></textarea>
+    <div class="form-inline">
+      <button class="btn btn-xs btn-success" id="symbols-submit"><i class="glyphicon glyphicon-search"></i> Submit symbols</button>
+      <div id="symbols-count"></div>
+      <div class="btn-group right">
+        <button class="btn btn-xs btn-warning" id="symbols-example"><i class="glyphicon glyphicon-bookmark"></i> Load example symbols</button>
+        <button class="btn btn-xs btn-danger" id="symbols-clear"><i class="glyphicon glyphicon-trash"></i> Clear symbols</button>
+      </div>
+    </div>
+    <hr class="inv">
+    <div id="results"></div>
+    <hr>
+    <div class="text-center"><small>Copyright &copy; 2015&ndash;{{ now.year }}</small></div>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+version: "2.1"
+services:
+  db:
+    image: mysql
+    restart: always
+    env_file: .env
+    ports:
+      - 127.0.0.1:10031:3306
+    volumes:
+      - ./db/lib:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+    command: --default-authentication-plugin=mysql_native_password
+  tor:
+    image: dperson/torproxy
+    restart: always
+  update:
+    build: update
+    restart: always
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
+      - tor
+  web:
+    build: web
+    restart: always
+    env_file: .env
+    ports:
+      - 127.0.0.1:10030:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
