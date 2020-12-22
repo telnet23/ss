@@ -1,3 +1,4 @@
 aiohttp
 aiohttp-jinja2
+aiohttp_socks
 aiomysql

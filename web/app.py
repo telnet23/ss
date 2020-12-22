@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import aiohttp_jinja2
 import aiomysql
 import jinja2
@@ -12,6 +10,8 @@ import re
 from aiohttp import web
 from datetime import datetime
 from warnings import filterwarnings
+
+import common
 
 filterwarnings('ignore', category=aiomysql.Warning)
 
@@ -122,11 +122,17 @@ async def symbols_explicit(request, query):
 
     for symbol in re.split(r'[\s,]+', re.sub(r'^[\s,]+|[\s,]+$', '', query)):
         symbol = symbol.upper()
-        if symbol in symbols:
+        if symbol == '' or symbol in symbols:
             continue
+
+        await cursor.execute('SELECT symbol FROM daily WHERE symbol = %s', symbol)
+        if await cursor.fetchone() is None:
+            await common.update_symbol(connection, symbol)
+
         await cursor.execute('SELECT symbol FROM daily WHERE symbol = %s', symbol)
         if await cursor.fetchone() is None:
             continue
+
         symbols.append(symbol)
 
     await cursor.close()

@@ -16,7 +16,9 @@ services:
     image: dperson/torproxy
     restart: always
   update:
-    build: update
+    build:
+      context: ./
+      dockerfile: ./update/Dockerfile
     restart: always
     env_file: .env
     depends_on:
@@ -26,7 +28,9 @@ services:
       - db
       - tor
   web:
-    build: web
+    build:
+      context: ./
+      dockerfile: ./web/Dockerfile
     restart: always
     env_file: .env
     ports:
@@ -36,3 +40,4 @@ services:
         condition: service_healthy
     links:
       - db
+      - tor
