@@ -4,7 +4,7 @@ import json
 import os
 import time
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from warnings import filterwarnings
 
 import common
@@ -12,12 +12,33 @@ import common
 filterwarnings('ignore', category=aiomysql.Warning)
 
 async def main():
-    pending = set()
-    for symbol in await symbols():
-        if len(pending) >= 64:
-            done, pending = await asyncio.wait(pending, return_when=asyncio.FIRST_COMPLETED)
-        pending.add(asyncio.create_task(update(symbol)))
-    await asyncio.wait(pending)
+    while True:
+        pending = set()
+        count = 1
+        for symbol in await symbols():
+            if len(pending) >= 64:
+                try:
+                    done, pending = await asyncio.wait(pending,
+                        return_when=asyncio.FIRST_COMPLETED, timeout=300)
+                except asyncio.TimeoutError as exception:
+                    print(exception)
+            pending.add(asyncio.create_task(update(symbol)))
+            print('symbol', count)
+            count += 1
+        try:
+            await asyncio.wait(pending, timeout=3600)
+        except asyncio.TimeoutError as exception:
+            print(exception)
+
+        now = datetime.utcnow()
+        if now.hour > 4 + 5 + 12:
+            then = now + timedelta(days=1)
+        else:
+            then = now
+        then.replace(hour=21, minute=5)
+        delta = (then - now).total_seconds()
+        print('sleeping for', delta, 'seconds')
+        await asyncio.sleep(delta)
 
 async def symbols():
     connection = await connect()
@@ -47,11 +68,5 @@ async def connect():
         password=os.environ['MYSQL_ROOT_PASSWORD']
     )
 
-last = None
-while True:
-    now = datetime.now()
-    if not last or (now.hour > 16 and (now - last).seconds > 43200):
-        last = now
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(main())
-    time.sleep(60)
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
